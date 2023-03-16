@@ -257,7 +257,7 @@ class FireAnt(Ant):
     food_cost = 5
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 5
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 5
 
     def __init__(self, health=3):
@@ -272,7 +272,13 @@ class FireAnt(Ant):
         the additional damage if the fire ant dies.
         """
         # BEGIN Problem 5
-        "*** YOUR CODE HERE ***"
+        total_amount = amount
+        if amount >= self.health:
+            total_amount += self.damage
+        copy_list = list(self.place.bees)
+        for bee in copy_list:
+            bee.reduce_health(total_amount)
+        super().reduce_health(amount)
         # END Problem 5
 
 # BEGIN Problem 6
@@ -845,13 +851,18 @@ class AssaultPlan(dict):
 
 
 
-
+from ants import *
 beehive, layout = Hive(AssaultPlan()), dry_layout
 dimensions = (1, 9)
-gamestate = GameState(None, beehive, ant_types(), layout, dimensions)
-ant = ShortThrower()
-out_of_range = Bee(2)
-gamestate.places["tunnel_0_0"].add_insect(ant)
-gamestate.places["tunnel_0_4"].add_insect(out_of_range)
-ant.action(gamestate)
-print(out_of_range.health)
+gamestate = GameState(None, beehive, ant_types(), layout, dimensions) 
+#
+# Testing fire does damage to all Bees in its Place
+place = gamestate.places['tunnel_0_4']
+fire = FireAnt(health=1)
+place.add_insect(fire)        # Add a FireAnt with 1 health
+place.add_insect(Bee(3))      # Add a Bee with 3 health
+place.add_insect(Bee(5))      # Add a Bee with 5 health
+print(len(place.bees))
+place.bees[0].action(gamestate) 
+fire.place is None
+len(place.bees)
