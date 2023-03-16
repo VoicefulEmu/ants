@@ -183,7 +183,7 @@ class ThrowerAnt(Ant):
     min_range = 0
     max_range = float('inf')
 
-    def nearest_bee(self, minr = min_range, maxr = max_range):
+    def nearest_bee(self):
         """Return the nearest Bee in a Place that is not the HIVE, connected to
         the ThrowerAnt's Place by following entrances.
 
@@ -193,7 +193,7 @@ class ThrowerAnt(Ant):
         stepper = self.place
         distance = 0
         while not stepper.is_hive:
-            if stepper.bees and minr <=distance< maxr:
+            if stepper.bees and self.min_range <= distance <= self.max_range:
                 return random_bee(stepper.bees)
             else:
                 distance +=1
