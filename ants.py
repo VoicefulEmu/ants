@@ -346,7 +346,7 @@ class ContainerAnt(Ant):
 
     def can_contain(self, other):
         # BEGIN Problem 
-        return self.ant_contained == None and type(other) != BodyguardAnt
+        return self.ant_contained == None and not issubclass(type(other),ContainerAnt)
         # END Problem 8
 
     def store_ant(self, ant):
@@ -393,7 +393,24 @@ class BodyguardAnt(ContainerAnt):
     # END Problem 8
 
 # BEGIN Problem 9
-# The TankAnt class
+class TankAnt(ContainerAnt):
+    """BodyguardAnt provides protection to other Ants."""
+
+    name = 'Tank'
+    food_cost = 6
+    health = 2
+    damage = 1
+    implemented = True   # Change to True to view in the GUI
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(self ,*args, **kwargs)
+        self.health = BodyguardAnt.health
+    def action(self, gamestate):
+        check_these_bees = list(self.place.bees)
+        for bee in check_these_bees:
+            bee.reduce_health(self.damage)
+        return super().action(gamestate)
+    
 # END Problem 9
 
 
