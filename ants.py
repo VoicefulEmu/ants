@@ -294,6 +294,37 @@ class WallAnt(Ant):
 
 # BEGIN Problem 7
 # The HungryAnt Class
+class HungryAnt(Ant):
+    name = 'Hungry'
+    implemented = True
+    food_cost = 4
+    chew_duration = 3
+    def __init__(self, health = 1):
+        super().__init__(health)
+        self.chew_countdown = 0
+    
+    def is_chewing(self):
+        return self.chew_countdown > 0 
+
+    def eat(self):
+        if self.place.bees:
+            bee2eat = random_bee(self.place.bees)
+            bee2eat.reduce_health(bee2eat.health)
+            self.chew_countdown = HungryAnt.chew_duration
+    
+    def action(self, gamestate):
+        if self.is_chewing():
+            self.chew_countdown -=1
+        else:
+            self.eat()
+
+
+    # def chew(self):
+    #     chew_countdown = 0
+    #     while chew_countdown < self.chew_duration:
+            
+
+
 # END Problem 7
 
 
@@ -862,14 +893,3 @@ from ants import *
 beehive, layout = Hive(AssaultPlan()), dry_layout
 dimensions = (1, 9)
 gamestate = GameState(None, beehive, ant_types(), layout, dimensions) 
-#
-# Testing fire does damage to all Bees in its Place
-place = gamestate.places['tunnel_0_4']
-fire = FireAnt(health=1)
-place.add_insect(fire)        # Add a FireAnt with 1 health
-place.add_insect(Bee(3))      # Add a Bee with 3 health
-place.add_insect(Bee(5))      # Add a Bee with 5 health
-print(len(place.bees))
-place.bees[0].action(gamestate) 
-fire.place is None
-len(place.bees)
