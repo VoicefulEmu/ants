@@ -51,8 +51,8 @@ class Place:
 
 class Insect:
     """An Insect, the base class of Ant and Bee, has health and a Place."""
-
     damage = 0
+    is_waterproof = False
     # ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health, place=None):
@@ -416,16 +416,24 @@ class TankAnt(ContainerAnt):
 
 class Water(Place):
     """Water is a place that can only hold waterproof insects."""
-
-    def add_insect(self, insect):
-        """Add an Insect to this place. If the insect is not waterproof, reduce
+    """Add an Insect to this place. If the insect is not waterproof, reduce
         its health to 0."""
         # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
+    def add_insect(self, insect):
+        Place.add_insect(self,insect)
+        if not insect.is_waterproof:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 # BEGIN Problem 11
-# The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    name = 'Scuba'
+    implemented = True
+    is_waterproof = True
+    food_cost = 6
+    health = 1
+    def __init__(self, health=1):
+        super().__init__(health)
 # END Problem 11
 
 # BEGIN Problem 12
@@ -484,6 +492,7 @@ class Bee(Insect):
 
     name = 'Bee'
     damage = 1
+    is_waterproof = True
     # OVERRIDE CLASS ATTRIBUTES HERE
 
     def sting(self, ant):
