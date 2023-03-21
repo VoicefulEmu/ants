@@ -111,6 +111,7 @@ class Ant(Insect):
     def __init__(self, health=1):
         """Create an Insect with a HEALTH quantity."""
         super().__init__(health)
+        self.buffed = False
 
     @classmethod
     def construct(cls, gamestate):
@@ -437,9 +438,7 @@ class ScubaThrower(ThrowerAnt):
 # END Problem 11
 
 # BEGIN Problem 12
-
-
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
 # END Problem 12
     """The Queen of the colony. The game is over if a bee enters her place."""
 
@@ -448,6 +447,8 @@ class QueenAnt(Ant):  # You should change this line
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
     implemented = False   # Change to True to view in the GUI
+    def __init__(self, health=1):
+        super().__init__(health)
     # END Problem 12
 
     @classmethod
@@ -457,7 +458,11 @@ class QueenAnt(Ant):  # You should change this line
         returns None otherwise. Remember to call the construct() method of the superclass!
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        if gamestate.queen_active:
+            return None
+        else:
+            super().construct(gamestate)
+            gamestate.queen_active = True
         # END Problem 12
 
     def action(self, gamestate):
@@ -465,9 +470,19 @@ class QueenAnt(Ant):  # You should change this line
         in her tunnel.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        super().action(gamestate)
+        stepper = self.place
+        while stepper:
+            if stepper.ant and stepper.ant.buffed == False:
+                stepper.ant.buffed = True
+                stepper.ant.damage *= 2
+            else:
+                stepper = stepper.exit
+        return None
         # END Problem 12
 
+    def remove_ant(self, other):
+        return None
     def reduce_health(self, amount):
         """Reduce health by AMOUNT, and if the QueenAnt has no health
         remaining, signal the end of the game.
@@ -744,6 +759,7 @@ class GameState:
         self.dimensions = dimensions
         self.active_bees = []
         self.configure(beehive, create_places)
+        self.queen_active = False
 
     def configure(self, beehive, create_places):
         """Configure the places in the colony."""
