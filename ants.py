@@ -476,11 +476,14 @@ class QueenAnt(ScubaThrower):  # You should change this line
         """
         # BEGIN Problem 12
         super().action(gamestate)
-        stepper = self.place
+        stepper = self.place.exit
         while stepper:
-            if type(stepper.ant) is (BodyguardAnt or ContainerAnt) and stepper.ant.ant_contained:
-                stepper.ant.ant_contained.buffed = True
-                stepper.ant.ant_contained.damage *= 2
+            if (type(stepper.ant) is BodyguardAnt or type(stepper.ant) is TankAnt) and stepper.ant.ant_contained:
+                if stepper.ant.ant_contained.buffed == True:
+                    pass
+                else:
+                    stepper.ant.ant_contained.buffed = True
+                    stepper.ant.ant_contained.damage *= 2
                 if stepper.ant and stepper.ant.buffed == False:
                     stepper.ant.buffed = True
                     stepper.ant.damage *= 2
@@ -497,8 +500,13 @@ class QueenAnt(ScubaThrower):  # You should change this line
         remaining, signal the end of the game.
         """
         # BEGIN Problem 12
-        return ants_lose()
+        self.health -= 1
+        if self.health <= 0:
+            return ants_lose()
         # END Problem 12
+
+    def remove_ant(self, other):
+        None
 
 
 class AntRemover(Ant):
