@@ -446,7 +446,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     def __init__(self, health=1):
         super().__init__(health)
     # END Problem 12
