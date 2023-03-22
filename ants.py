@@ -43,7 +43,10 @@ class Place:
         Asks the insect to remove itself from the current place. This method exists so
             it can be enhanced in subclasses.
         """
-        insect.remove_from(self)
+        if type(insect) == QueenAnt:
+            return None
+        else:
+            insect.remove_from(self)
 
     def __str__(self):
         return self.name
@@ -69,6 +72,8 @@ class Insect:
         >>> test_insect.health
         3
         """
+        # if type(self) == QueenAnt:
+        #     ants_lose()
         self.health -= amount
         if self.health <= 0:
             self.death_callback()
@@ -461,8 +466,8 @@ class QueenAnt(ScubaThrower):  # You should change this line
         if gamestate.queen_active:
             return None
         else:
-            super().construct(gamestate)
             gamestate.queen_active = True
+            return super().construct(gamestate)
         # END Problem 12
 
     def action(self, gamestate):
@@ -473,6 +478,12 @@ class QueenAnt(ScubaThrower):  # You should change this line
         super().action(gamestate)
         stepper = self.place
         while stepper:
+            if type(stepper.ant) is (BodyguardAnt or ContainerAnt) and stepper.ant.ant_contained:
+                stepper.ant.ant_contained.buffed = True
+                stepper.ant.ant_contained.damage *= 2
+                if stepper.ant and stepper.ant.buffed == False:
+                    stepper.ant.buffed = True
+                    stepper.ant.damage *= 2
             if stepper.ant and stepper.ant.buffed == False:
                 stepper.ant.buffed = True
                 stepper.ant.damage *= 2
@@ -481,14 +492,12 @@ class QueenAnt(ScubaThrower):  # You should change this line
         return None
         # END Problem 12
 
-    def remove_ant(self, other):
-        return None
     def reduce_health(self, amount):
         """Reduce health by AMOUNT, and if the QueenAnt has no health
         remaining, signal the end of the game.
         """
         # BEGIN Problem 12
-        "*** YOUR CODE HERE ***"
+        return ants_lose()
         # END Problem 12
 
 
