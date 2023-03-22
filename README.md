@@ -1,4 +1,6 @@
 # ants
+see https://cs111.byu.edu/proj/ants/ for more information
+
 ## Problem 12 (3 pt)
 Finally, implement the QueenAnt. The queen is a waterproof ScubaThrower that inspires her fellow ants through her bravery. In addition to the standard ScubaThrower action, the QueenAnt doubles the damage of all the ants behind her each time she performs an action. Once an ant’s damage has been doubled, it is not doubled again for subsequent turns.
 
